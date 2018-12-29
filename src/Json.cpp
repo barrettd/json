@@ -80,14 +80,18 @@ m_dictionary() {
 }
 
 JsonObject::~JsonObject( void ) {
-    std::map<std::string, JsonValue*>::iterator it  = m_dictionary.begin();
-    std::map<std::string, JsonValue*>::iterator end = m_dictionary.end();
-    while( it != end ) {
-        JsonValue *value = it->second;
-        delete value;
-        it++;
-    }
-    m_dictionary.clear();
+    clear();
+}
+
+void JsonObject::clear( void ) {
+  std::map<std::string, JsonValue*>::iterator it  = m_dictionary.begin();
+  std::map<std::string, JsonValue*>::iterator end = m_dictionary.end();
+  while( it != end ) {
+      JsonValue *value = it->second;
+      delete value;
+      it++;
+  }
+  m_dictionary.clear();
 }
 
 const std::map<std::string,JsonValue*>& JsonObject::getValues( void ) const {
@@ -151,13 +155,17 @@ m_values() {
 }
 
 JsonArray::~JsonArray( void ) {
-    std::vector<JsonValue*>::iterator it  = m_values.begin();
-    std::vector<JsonValue*>::iterator end = m_values.end();
-    while( it != end ) {
-        JsonValue *value = *it++;
-        delete value;
-    }
-    m_values.clear();
+    clear();
+}
+
+void JsonArray::clear( void ) {
+  std::vector<JsonValue*>::iterator it  = m_values.begin();
+  std::vector<JsonValue*>::iterator end = m_values.end();
+  while( it != end ) {
+      JsonValue *value = *it++;
+      delete value;
+  }
+  m_values.clear();
 }
 
 const std::vector<JsonValue*>& JsonArray::getValues( void ) const {

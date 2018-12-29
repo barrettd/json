@@ -73,6 +73,8 @@ public:
     JsonObject( const std::string &name );
     ~JsonObject( void );
 
+    void clear( void );
+
     const std::map<std::string,JsonValue*> &getValues( void ) const;
 
     int getCount( void ) const;
@@ -88,6 +90,8 @@ public:
     JsonArray( void );
     JsonArray( const std::string &name );
     ~JsonArray( void );
+
+    void clear( void );
 
     const std::vector<JsonValue*> &getValues( void ) const;
 
