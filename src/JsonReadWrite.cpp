@@ -53,7 +53,6 @@ inline bool isAlpha( const char ch ) {
     return ( ch >= 'a' && ch <= 'z' ) || ( ch >= 'A' && ch <= 'Z' );
 }
 
-
 inline bool isContainer( JsonValue *value ) {
     if( value == 0 ) {
         return false;
@@ -383,7 +382,6 @@ JsonValue* JsonReader::read( const std::string &path ) {
 #pragma mark JsonWriter
 // ------------------------------------------------------------------------------------------------
 JsonWriter::JsonWriter( void ) {
-
 }
 
 JsonWriter::~JsonWriter( void ) {

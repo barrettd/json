@@ -107,7 +107,6 @@ public:
 
     bool write(    std::ostream &stream, const JsonValue *value );
     bool write( const std::string &path, const JsonValue *value );
-
 };
 
 #endif /* JsonReadWrite_hpp */

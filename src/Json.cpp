@@ -132,8 +132,6 @@ void JsonObject::add( JsonValue *value ) {
             delete previous;
             m_dictionary.erase(it);
         }
-        JsonValue *prevous = m_dictionary[name];
-        delete prevous;
         m_dictionary[name] = value;
     } else {
         delete value;
