@@ -52,7 +52,10 @@ protected:
 public:
     JsonValue( JsonType jtype );
     JsonValue( JsonType jtype, const std::string &name );
+    JsonValue( const JsonValue &other );
     virtual ~JsonValue( void );
+
+    JsonValue& operator= ( const JsonValue &other );
 
     void setType( JsonType jtype );
     JsonType getType( void ) const;
@@ -67,11 +70,17 @@ public:
 class JsonObject: public JsonValue {
 protected:
     std::map<std::string,JsonValue*> m_dictionary;
+    
+protected:
+    JsonObject& copy( const JsonObject &other );
 
 public:
     JsonObject( void );
     JsonObject( const std::string &name );
+    JsonObject( const JsonObject &other );
     ~JsonObject( void );
+
+    JsonObject& operator= ( const JsonObject &other );
 
     void clear( void );
 
@@ -86,10 +95,17 @@ public:
 class JsonArray: public JsonValue {
 protected:
     std::vector<JsonValue*> m_values;
+
+protected:
+    JsonArray& copy( const JsonArray &other );
+
 public:
     JsonArray( void );
     JsonArray( const std::string &name );
+    JsonArray( const JsonArray &other );
     ~JsonArray( void );
+
+    JsonArray& operator= ( const JsonArray &other );
 
     void clear( void );
 
@@ -104,11 +120,15 @@ public:
 class JsonString: public JsonValue {
 protected:
     std::string m_value;
+
 public:
     JsonString( void );
     JsonString( const std::string &name );
     JsonString( const std::string &name, const std::string &value );
+    JsonString( const JsonString &other );
     ~JsonString( void );
+
+    JsonString& operator= ( const JsonString &other );
 
     void setValue( const std::string &value );
     const std::string &getValue( void ) const;
@@ -122,7 +142,10 @@ public:
     JsonLong( void );
     JsonLong( const std::string &name );
     JsonLong( const std::string &name, const long value );
+    JsonLong( const JsonLong &other );
     ~JsonLong( void );
+
+    JsonLong& operator= ( const JsonLong &other );
 
     void setValue( const long value );
     long getValue( void ) const;
@@ -135,7 +158,10 @@ public:
     JsonDouble( void );
     JsonDouble( const std::string &name );
     JsonDouble( const std::string &name, const double value );
+    JsonDouble( const JsonDouble &other );
     ~JsonDouble( void );
+
+    JsonDouble& operator= ( const JsonDouble &other );
 
     void setValue( const double value );
     double getValue( void ) const;
@@ -147,7 +173,10 @@ public:
     JsonBoolean( void );
     JsonBoolean( const std::string &name );
     JsonBoolean( const std::string &name, const bool value );
+    JsonBoolean( const JsonBoolean &other );
     ~JsonBoolean( void );
+
+    JsonBoolean& operator= ( const JsonBoolean &other );
 
     void setValue( const bool value );
     bool getValue( void ) const;
@@ -157,7 +186,10 @@ class JsonNull: public JsonValue {
 public:
     JsonNull( void );
     JsonNull( const std::string &name );
+    JsonNull( const JsonNull &other );
     ~JsonNull( void );
+    
+    JsonNull& operator= ( const JsonNull &other );
 };
 
 

@@ -26,6 +26,68 @@
 #include "Json.hpp"
 
 // ------------------------------------------------------------------------------------------------
+#pragma mark static functions
+// ------------------------------------------------------------------------------------------------
+static JsonValue* duplicate( JsonValue *ptr ) {
+    if( ptr == 0 ) {
+        return 0;
+    }
+    JsonValue *newValue = 0;
+    switch( ptr->getType()) {
+        case JsonValue::JSON_OBJECT: {
+            JsonObject *jsonObject = dynamic_cast<JsonObject*>(ptr);
+            if( jsonObject != 0 ) {
+                newValue = new JsonObject( *jsonObject );
+            }
+            break;
+        }
+        case JsonValue::JSON_ARRAY: {
+            JsonArray *jsonArray = dynamic_cast<JsonArray*>(ptr);
+            if( jsonArray != 0 ) {
+                newValue = new JsonArray( *jsonArray );
+            }
+            break;
+        }
+        case JsonValue::JSON_STRING: {
+            JsonString *value = dynamic_cast<JsonString*>(ptr);
+            if( value != 0 ) {
+                newValue = new JsonString( *value );
+            }
+            break;
+        }
+        case JsonValue::JSON_LONG: {
+            JsonLong *value = dynamic_cast<JsonLong*>(ptr);
+            if( value != 0 ) {
+                newValue = new JsonLong( *value );
+            }
+            break;
+        }
+        case JsonValue::JSON_DOUBLE: {
+            JsonDouble *value = dynamic_cast<JsonDouble*>(ptr);
+            if( value != 0 ) {
+                newValue = new JsonDouble( *value );
+            }
+            break;
+        }
+        case JsonValue::JSON_BOOLEAN: {
+            JsonBoolean *value = dynamic_cast<JsonBoolean*>(ptr);
+            if( value != 0 ) {
+                newValue = new JsonBoolean( *value );
+            }
+            break;
+        }
+        case JsonValue::JSON_NULL: {
+            JsonNull *value = dynamic_cast<JsonNull*>(ptr);
+            if( value != 0 ) {
+                newValue = new JsonNull( *value );
+            }
+            break;
+        }
+    }
+    return newValue;
+}
+
+// ------------------------------------------------------------------------------------------------
 #pragma mark JsonValue
 // ------------------------------------------------------------------------------------------------
 JsonValue::JsonValue( JsonType jtype ):
@@ -38,7 +100,18 @@ m_type( jtype ),
 m_name( name ) {
 }
 
+JsonValue::JsonValue( const JsonValue &other ):
+m_type( other.m_type ),
+m_name( other.m_name ) {
+}
+
 JsonValue::~JsonValue( void ) {
+}
+
+JsonValue& JsonValue::operator= ( const JsonValue &other ) {
+    m_type = other.m_type;
+    m_name = other.m_name;
+    return *this;
 }
 
 void JsonValue::setType( JsonType jtype ) {
@@ -79,13 +152,35 @@ JsonValue(JSON_OBJECT, name),
 m_dictionary() {
 }
 
+JsonObject::JsonObject( const JsonObject &other ):
+JsonValue( other ) {
+    copy( other );
+}
+
 JsonObject::~JsonObject( void ) {
     clear();
 }
 
+JsonObject& JsonObject::copy( const JsonObject &other ) {
+    m_dictionary.clear();
+          std::map<std::string, JsonValue*>::const_iterator it  = other.m_dictionary.begin();
+    const std::map<std::string, JsonValue*>::const_iterator end = other.m_dictionary.end();
+    while( it != end ) {
+        JsonValue *value = duplicate( it->second );
+        add( value );
+        it++;
+    }
+    return *this;
+}
+
+JsonObject& JsonObject::operator= ( const JsonObject &other ) {
+    m_name = other.m_name;
+    return copy( other );
+}
+
 void JsonObject::clear( void ) {
-  std::map<std::string, JsonValue*>::iterator it  = m_dictionary.begin();
-  std::map<std::string, JsonValue*>::iterator end = m_dictionary.end();
+        std::map<std::string, JsonValue*>::const_iterator it  = m_dictionary.begin();
+  const std::map<std::string, JsonValue*>::const_iterator end = m_dictionary.end();
   while( it != end ) {
       JsonValue *value = it->second;
       delete value;
@@ -154,13 +249,34 @@ JsonValue(JSON_ARRAY, name),
 m_values() {
 }
 
+JsonArray::JsonArray( const JsonArray &other ):
+JsonValue( other ) {
+    copy( other );
+}
+
 JsonArray::~JsonArray( void ) {
     clear();
 }
 
+JsonArray& JsonArray::copy( const JsonArray &other ) {
+    m_values.clear();
+          std::vector<JsonValue*>::const_iterator it  = other.m_values.begin();
+    const std::vector<JsonValue*>::const_iterator end = other.m_values.end();
+    while( it != end ) {
+        JsonValue *value = duplicate( *it++ );
+        add( value );
+    }
+    return *this;
+}
+
+JsonArray& JsonArray::operator= ( const JsonArray &other ) {
+    m_name = other.m_name;
+    return copy( other );
+}
+
 void JsonArray::clear( void ) {
-  std::vector<JsonValue*>::iterator it  = m_values.begin();
-  std::vector<JsonValue*>::iterator end = m_values.end();
+        std::vector<JsonValue*>::const_iterator it  = m_values.begin();
+  const std::vector<JsonValue*>::const_iterator end = m_values.end();
   while( it != end ) {
       JsonValue *value = *it++;
       delete value;
@@ -214,7 +330,18 @@ JsonValue(JSON_STRING, name),
 m_value( value ) {
 }
 
+JsonString::JsonString( const JsonString &other ):
+JsonValue( other ),
+m_value( other.m_value ) {
+}
+
 JsonString::~JsonString( void ) {
+}
+
+JsonString& JsonString::operator= ( const JsonString &other ) {
+    m_name  = other.m_name;
+    m_value = other.m_value;
+    return *this;
 }
 
 void JsonString::setValue( const std::string &value ) {
@@ -245,7 +372,18 @@ JsonValue(JSON_LONG, name),
 m_value( value ) {
 }
 
+JsonLong::JsonLong( const JsonLong &other ):
+JsonValue( other ),
+m_value( other.m_value ) {
+}
+
 JsonLong::~JsonLong( void ) {
+}
+
+JsonLong& JsonLong::operator= ( const JsonLong &other ) {
+    m_name  = other.m_name;
+    m_value = other.m_value;
+    return *this;
 }
 
 void JsonLong::setValue( const long value ) {
@@ -271,7 +409,18 @@ JsonValue(JSON_DOUBLE, name),
 m_value( value ) {
 }
 
+JsonDouble::JsonDouble( const JsonDouble &other ):
+JsonValue( other ),
+m_value( other.m_value ) {
+}
+
 JsonDouble::~JsonDouble( void ) {
+}
+
+JsonDouble& JsonDouble::operator= ( const JsonDouble &other ) {
+    m_name  = other.m_name;
+    m_value = other.m_value;
+    return *this;
 }
 
 void JsonDouble::setValue( const double value ) {
@@ -297,7 +446,18 @@ JsonValue(JSON_BOOLEAN, name),
 m_value( value ) {
 }
 
+JsonBoolean::JsonBoolean( const JsonBoolean &other ):
+JsonValue( other ),
+m_value( other.m_value ) {
+}
+
 JsonBoolean::~JsonBoolean( void ) {
+}
+
+JsonBoolean& JsonBoolean::operator= ( const JsonBoolean &other ) {
+    m_name  = other.m_name;
+    m_value = other.m_value;
+    return *this;
 }
 
 void JsonBoolean::setValue( const bool value ) {
@@ -318,5 +478,15 @@ JsonNull::JsonNull( const std::string &name ):
 JsonValue(JSON_NULL, name) {
 }
 
+JsonNull::JsonNull( const JsonNull &other ):
+JsonValue( other ) {
+}
+
 JsonNull::~JsonNull( void ) {
 }
+
+JsonNull& JsonNull::operator= ( const JsonNull &other ) {
+    m_name = other.m_name;
+    return *this;
+}
+
