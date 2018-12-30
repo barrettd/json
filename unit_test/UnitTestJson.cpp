@@ -278,8 +278,9 @@ static bool unit_test_json_string_01( void ) {
 
 static bool unit_test_write_file( const std::string &filePath ) {
     JsonObject *root = new JsonObject( "root" );
-    root->add( new JsonString( "name", "Gru" ));
-    root->add( new JsonLong(  "steps", 1000 ));
+    root->add( new JsonString(  "name", "Gru" ));
+    root->add( new JsonLong(   "steps",  1000 ));
+    root->add( new JsonDouble( "price",  1.00 ));
 
     JsonWriter writer;
     const bool result = CHECK( writer.write( filePath, root ));
@@ -298,15 +299,18 @@ static bool unit_test_read_file( const std::string &filePath ) {
         delete root;
         return false;
     }
-    JsonString *name = dynamic_cast<JsonString*>(object->getValue("name"));
-    JsonLong  *steps = dynamic_cast<JsonLong*>(  object->getValue("steps"));
+    JsonString  *name = dynamic_cast<JsonString*>(object->getValue("name"));
+    JsonLong   *steps = dynamic_cast<JsonLong*>(  object->getValue("steps"));
+    JsonDouble *price = dynamic_cast<JsonDouble*>(object->getValue("price"));
     if( !CHECK(  name != 0 ) ||
-        !CHECK( steps != 0 )) {
+        !CHECK( steps != 0 ) ||
+        !CHECK( price != 0 )) {
         delete root;
         return false;
     }
     if( !CHECK(name->getValue() == "Gru" ) ||
-        !CHECK(steps->getValue() == 1000 )) {
+        !CHECK(steps->getValue() == 1000 ) ||
+        !CHECK(price->getValue() == 1.00 )) {
         delete root;
         return false;
     }

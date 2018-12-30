@@ -23,7 +23,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 //
-
+#include <cmath>        // Used for std::modf()
 #include <iostream>
 #include <fstream>
 #include "JsonReadWrite.hpp"
@@ -491,7 +491,12 @@ bool JsonWriter::write( std::ostream &stream, const JsonDouble *jsonDouble, cons
     if( !writeName( stream, jsonDouble, inObject )) {
         return false;
     }
-    stream << jsonDouble->getValue();
+    const double value = jsonDouble->getValue();
+    stream << value;
+    double integerPart;
+    if( std::modf( value, &integerPart ) == 0.0 ) {
+        stream << ".0";     // Stream an explicit franctional part of 0
+    }
     return true;
 }
 
