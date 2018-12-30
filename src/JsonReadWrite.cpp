@@ -296,9 +296,9 @@ bool JsonReader::processNumber( const char ch ) {
 
 bool JsonReader::processTrue( const char ch ) {
     // true
-    const char sanitized = tolower( ch );
-    if( sanitized == 'r' || sanitized == 'u' || sanitized == 'e' ) {
-        m_accumulator += ch;
+    const char lower = tolower( ch );
+    if( lower == 'r' || lower == 'u' || lower == 'e' ) {
+        m_accumulator += lower;
     }
     if( m_accumulator == "true" ) {
         add( new JsonBoolean( m_key, true ));
@@ -308,8 +308,8 @@ bool JsonReader::processTrue( const char ch ) {
 
 bool JsonReader::processFalse( const char ch ) {
     // false
-    const char sanitized = tolower( ch );
-    if( sanitized == 'a' || sanitized == 'l' || sanitized == 's' || sanitized == 'e' ) {
+    const char lower = tolower( ch );
+    if( lower == 'a' || lower == 'l' || lower == 's' || lower == 'e' ) {
         m_accumulator += ch;
     }
     if( m_accumulator == "false" ) {
@@ -320,9 +320,9 @@ bool JsonReader::processFalse( const char ch ) {
 
 bool JsonReader::processNull( const char ch ) {
     // null
-    const char sanitized = tolower( ch );
-    if( sanitized == 'u' || sanitized == 'l' ) {
-        m_accumulator += ch;
+    const char lower = tolower( ch );
+    if( lower == 'u' || lower == 'l' ) {
+        m_accumulator += lower;
     }
     if( m_accumulator == "null" ) {
         add( new JsonNull( m_key ));
