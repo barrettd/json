@@ -306,6 +306,22 @@ JsonValue* JsonArray::getValue( const int index ) {
     return m_values[index];
 }
 
+bool JsonArray::setValue( const int index, JsonValue *value ) {
+    const int count = (int) m_values.size();
+    if( index < 0 || index > count || value == 0 ) {
+        delete value;
+        return false;
+    }
+    if( index == count ) {
+        m_values.push_back( value );
+    } else {
+        JsonValue *previous = m_values[index];
+        m_values[index] = value;
+        delete previous;
+    }
+    return true;
+}
+
 void JsonArray::add( JsonValue *value ) {
     if( value != 0 ) {
         m_values.push_back( value );

@@ -114,6 +114,7 @@ public:
     int getCount( void ) const;
     const JsonValue *getValue( const int index ) const;
           JsonValue *getValue( const int index );
+    bool setValue( const int index, JsonValue *value );
     virtual void add( JsonValue *value );
 };
 
